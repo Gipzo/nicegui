@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
+import os
 from typing import Awaitable, Callable
+
+from starlette.routing import Mount
+from starlette.staticfiles import StaticFiles
 
 from .ui import Ui  # NOTE: before justpy
 import justpy as jp
@@ -34,4 +38,5 @@ ui = Ui()
 
 page = ui.page('/', classes=globals.config.main_page_classes)
 page.__enter__()
+ui.add_route(Mount('/templates', StaticFiles(directory=f'{os.environ.get("STATIC_DIRECTORY", None)}/templates'), name='templates'))
 jp.justpy(lambda: page, start_server=False)
